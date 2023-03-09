@@ -2,47 +2,46 @@
 <html>
   <head>
     <title>Chat app using Socket IO and Node JS</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
-    <h2 id="logo" style="text-align: center; margin-top: 50px">
-      Chat App using Socket io
-    </h2>
-    <form id="form" style="width: 40%; margin: auto">
-      <!-- Name input -->
-      <div class="form-outline mb-4">
-        <label class="form-label" for="form4Example1">Name</label>
-        <input type="text" id="form4Example1" class="form-control" />
+    <div class="chat_window">
+      <div class="top_menu">
+        <div class="buttons">
+          <div class="button close"></div>
+          <div class="button minimize"></div>
+          <div class="button maximize"></div>
+        </div>
+        <div class="title">Chat</div>
       </div>
+      <ul class="messages" id="messageArea"></ul>
 
-      <!-- Message input -->
-      <div class="form-outline mb-4">
-        <label class="form-label" for="form4Example3">Message</label>
-        <textarea class="form-control" id="form4Example3" rows="4"></textarea>
-      </div>
-
-      <!-- Submit button -->
-      <button
-        type="submit"
-        class="btn btn-primary btn-block mb-4"
-        style="width: 40%; margin-left: 200px"
-      >
-        Send
-      </button>
-    </form>
-    <div id="messageArea" style="width: 40%; margin: auto"></div>
+      <form id="form">
+        <div class="bottom_wrapper clearfix">
+          <div class="message_input_wrapper">
+            <input
+              class="message_input"
+              id="form4Example1"
+              placeholder="Type your name"
+            />
+          </div>
+          <div class="message_input_wrapper">
+            <input
+              class="message_input"
+              id="form4Example3"
+              placeholder="Type your message here..."
+            />
+          </div>
+          <button class="send_message" type="submit">
+            <div class="icon"></div>
+            <div class="text">Send</div>
+          </button>
+        </div>
+      </form>
+    </div>
   </body>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"
-  ></script>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     let socket = io();
@@ -61,21 +60,25 @@
         message.value = "";
       }
     });
-
+    let name;
     // Listen to send name event
     socket.on("send name", (username) => {
-      let name = document.createElement("p");
-      name.style.backgroundColor = "grey";
-      name.style.width = "100%";
-      name.style.textAlign = "center";
-      name.style.color = "white";
-      name.textContent = username + ":";
+      name = document.createElement("p");
+      name.classList.add("name");
+      name.textContent = username;
       messageArea.appendChild(name);
     });
 
     // Listen to send message event
     socket.on("send message", (chat) => {
       let chatContent = document.createElement("p");
+      console.log(myname.value);
+      console.log(name.textContent);
+      if (myname.value === name.textContent) {
+        chatContent.classList.add("message-text-sender");
+      } else {
+        chatContent.classList.add("message-text");
+      }
       chatContent.textContent = chat;
       messageArea.appendChild(chatContent);
     });
